@@ -10,7 +10,7 @@
 <title>Cacciatore di Stelle Cadenti</title>
 <link rel="manifest" href="manifest.json">
 <style>
-:root{--red:#ff4b4b;--dim:#ff7777;--bg:#030000;--panel:#110303}
+:root{--red:#ff4b4b;--dim:#ff7777;--bg:#030000;--panel:#110303;--gold:#ffd700;--cyan:#4fc3f7}
 *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--red);font-family:system-ui,-apple-system,Segoe UI,sans-serif;height:100%;overflow:hidden}
 body{touch-action:none}.app{height:100%;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 12px env(safe-area-inset-bottom)}
 header{display:flex;justify-content:space-between;align-items:center;padding:8px 2px 5px}
@@ -21,38 +21,128 @@ main{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
 .compass{width:min(82vw,390px);height:min(82vw,390px);max-height:55vh;border:2px solid #8d2828;border-radius:50%;position:relative;display:grid;place-items:center;box-shadow:0 0 30px #240000 inset}
 .compass:before{content:"";position:absolute;inset:8%;border:1px solid #451313;border-radius:50%}
 
-/* MODIFICA 1: Il quadrante (tick) ora ruota */
+/* Contenitore del quadrante che ruota */
 .tick-container {
     position: absolute;
     inset: 0;
     transition: transform 0.12s linear;
     pointer-events: none;
 }
-.tick{position:absolute;inset:0;text-align:center;font-weight:800;font-size:15px}
+.tick{position:absolute;inset:0;text-align:center;font-weight:800;font-size:15px;color:var(--gold)}
 .n{position:absolute;top:8px;left:50%;transform:translateX(-50%)}
 .e{position:absolute;right:12px;top:50%;transform:translateY(-50%)}
 .s{position:absolute;bottom:8px;left:50%;transform:translateX(-50%)}
 .w{position:absolute;left:12px;top:50%;transform:translateY(-50%)}
 
-/* MODIFICA 2: La freccia è fissa e punta sempre verso l'alto */
+/* Freccia più chiara (bianca/azzurra) per contrasto */
 .arrow-fixed {
     position: absolute;
     width: 0;
     height: 0;
-    border-left: 13px solid transparent;
-    border-right: 13px solid transparent;
-    border-bottom: 90px solid var(--red);
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 100px solid var(--cyan);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -100%);
-    filter: drop-shadow(0 0 7px #f00);
+    filter: drop-shadow(0 0 12px rgba(79, 195, 247, 0.6));
     z-index: 10;
     pointer-events: none;
 }
-.center{text-align:center;font-size:28px;font-weight:900;position:relative;z-index:2;background:rgba(0,0,0,0.5);padding:4px 12px;border-radius:8px}
-.bearing{font-size:13px;margin-top:4px}.target{position:absolute;bottom:10px;left:10px;right:10px;text-align:center;font-size:12px;background:#0d0202dd;padding:7px;border-radius:9px;z-index:5}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.card{background:var(--panel);border:1px solid #3d0c0c;border-radius:12px;padding:10px}.label{font-size:10px;opacity:.7;text-transform:uppercase}.value{font-size:16px;font-weight:800;margin-top:3px}.small{font-size:11px;line-height:1.35}
-.status{font-size:11px;min-height:16px;text-align:center}.controls{display:flex;gap:7px}.controls button{flex:1}
+.arrow-fixed:after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 20px solid var(--cyan);
+}
+
+/* Centro con i gradi - ora in bianco/gold per leggibilità */
+.center{
+    text-align:center;
+    font-size:32px;
+    font-weight:900;
+    position:relative;
+    z-index:2;
+    background:rgba(0,0,0,0.7);
+    padding:6px 16px;
+    border-radius:12px;
+    color:var(--gold);
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+.bearing{
+    font-size:14px;
+    margin-top:4px;
+    color:var(--cyan);
+    font-weight:600;
+}
+
+/* Target / Indicatore dello sciame - ora ruota con il quadrante */
+.target-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    transition: transform 0.12s linear;
+}
+.target-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85%;
+    height: 85%;
+    border-radius: 50%;
+    border: 3px dashed rgba(255, 215, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.target-label {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.85);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--gold);
+    white-space: nowrap;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+}
+.target-marker {
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 14px solid var(--gold);
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
+}
+
+/* Target inferiore (testo) - rimosso perché ora c'è l'indicatore grafico */
+.target-text {
+    display: none;
+}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.card{background:var(--panel);border:1px solid #3d0c0c;border-radius:12px;padding:10px}
+.label{font-size:10px;opacity:.7;text-transform:uppercase}
+.value{font-size:16px;font-weight:800;margin-top:3px;color:var(--gold)}
+.small{font-size:11px;line-height:1.35;color:#aaa}
+.status{font-size:11px;min-height:16px;text-align:center;color:var(--cyan)}
+.controls{display:flex;gap:7px;margin-top:4px}
+.controls button{flex:1}
 .redfilter{position:fixed;inset:0;background:rgba(255,0,0,.10);pointer-events:none;mix-blend-mode:multiply}
 @media(min-width:700px){.app{max-width:800px;margin:auto}.compassWrap{min-height:430px}}
 </style>
@@ -63,7 +153,7 @@ main{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
 <main>
 <div class="compassWrap">
   <div class="compass" id="compass">
-    <!-- Il quadrante ruota -->
+    <!-- Quadrante che ruota (N, E, S, O) -->
     <div class="tick-container" id="tickContainer">
         <div class="tick">
             <span class="n">N</span>
@@ -72,10 +162,23 @@ main{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
             <span class="w">O</span>
         </div>
     </div>
-    <!-- La freccia rimane fissa verso l'alto -->
+    
+    <!-- Indicatore dello sciame che ruota con il quadrante -->
+    <div class="target-container" id="targetContainer">
+        <div class="target-indicator" id="targetIndicator">
+            <div class="target-marker"></div>
+            <div class="target-label" id="targetLabel">Perseidi 45°</div>
+        </div>
+    </div>
+    
+    <!-- Freccia fissa (ora azzurra) -->
     <div class="arrow-fixed"></div>
-    <div><div class="center" id="heading">--°</div><div class="bearing" id="dir">Attendo bussola…</div></div>
-    <div class="target" id="target">Calcolo della direzione meteorica…</div>
+    
+    <!-- Centro con gradi -->
+    <div>
+        <div class="center" id="heading">--°</div>
+        <div class="bearing" id="dir">Attendo bussola…</div>
+    </div>
   </div>
 </div>
 <div class="status" id="status">Premi "Avvia sensori" e consenti GPS/orientamento.</div>
@@ -92,6 +195,8 @@ main{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
 <script>
 const $=id=>document.getElementById(id);
 let heading=0, lat=null, lon=null, watch=null, night=false;
+let currentShowerAz = 45; // Default
+
 const showers=[
  {name:"Quadrantidi",peak:[1,4],active:[12,28,1,12],rate:25,az:45},
  {name:"Liridi",peak:[4,22],active:[4,16,4,30],rate:18,az:70},
@@ -103,7 +208,9 @@ const showers=[
  {name:"Geminidi",peak:[12,14],active:[12,4,12,20],rate:150,az:180},
  {name:"Ursidi",peak:[12,22],active:[12,17,12,26],rate:10,az:15}
 ];
+
 function dayOfYear(d){return Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(d.getFullYear(),0,0))/86400000)}
+
 function activeShower(){
  const d=new Date(), m=d.getMonth()+1, day=d.getDate();
  let candidates=showers.filter(s=>{
@@ -114,6 +221,7 @@ function activeShower(){
  if(!candidates.length)return null;
  return candidates.sort((a,b)=>Math.abs(dayOfYear(d)-dayOfYear(new Date(d.getFullYear(),a.peak[0]-1,a.peak[1])))-Math.abs(dayOfYear(d)-dayOfYear(new Date(d.getFullYear(),b.peak[0]-1,b.peak[1]))))[0];
 }
+
 function moonPhase(date){
  const syn=29.530588853, ref=new Date(Date.UTC(2000,0,6,18,14,0));
  let age=((date-ref)/86400000)%syn;if(age<0)age+=syn;
@@ -121,33 +229,47 @@ function moonPhase(date){
  let name=frac<.0625?"Luna nuova":frac<.1875?"Falce crescente":frac<.3125?"Primo quarto":frac<.4375?"Gibbosa crescente":frac<.5625?"Luna piena":frac<.6875?"Gibbosa calante":frac<.8125?"Ultimo quarto":frac<.9375?"Falce calante":"Luna nuova";
  return {name,illum,age};
 }
+
 function cardinal(deg){let a=["N","NE","E","SE","S","SO","O","NO"];return a[Math.round(deg/45)%8]}
+
 function updateSky(){
  const s=activeShower(), moon=moonPhase(new Date());
  $("moon").textContent=moon.name;
  $("moonInfo").textContent=`Illuminazione circa ${Math.round(moon.illum*100)}%`;
+ 
  if(s){
+   currentShowerAz = s.az;
    $("shower").textContent=s.name;
-   $("showerInfo").textContent=`Picco intorno al ${s.peak[1]}/${s.peak[0]} · ZHR teorico ~${s.rate}`;
+   $("showerInfo").textContent=`Picco intorno al ${s.peak[1]}/${s.peak[0]} · ZHR ~${s.rate}`;
    $("best").textContent=cardinal(s.az)+` ${s.az}°`;
    $("bestInfo").textContent="Punta verso questa zona e guarda anche lateralmente.";
-   $("target").textContent=`☄️ ${s.name}: prova ${cardinal(s.az)} (${s.az}°)`;
+   $("targetLabel").textContent = `${s.name} ${s.az}°`;
+   $("targetIndicator").style.display = 'flex';
  }else{
    $("shower").textContent="Nessuno in finestra";
    $("showerInfo").textContent="Le meteore sporadiche restano comunque osservabili.";
    $("best").textContent="Lontano dalla Luna";
    $("bestInfo").textContent="Scegli la parte di cielo più buia.";
-   $("target").textContent="🌠 Meteore sporadiche: cerca il cielo più buio.";
+   $("targetLabel").textContent = "Meteore sporadiche";
+   $("targetIndicator").style.display = 'flex';
  }
 }
+
 function setHeading(h){
  heading=(h+360)%360;
  $("heading").textContent=Math.round(heading)+"°";
  $("dir").textContent=cardinal(heading);
- // MODIFICA: Ora ruota SOLO il quadrante (N, E, S, O)
- // Il quadrante deve ruotare in senso antiorario rispetto alla bussola
+ 
+ // Ruota il quadrante (N, E, S, O)
  $("tickContainer").style.transform = `rotate(${-heading}deg)`;
+ 
+ // Ruota l'indicatore dello sciame nella posizione corretta
+ // Deve essere posizionato all'azimut dello sciame rispetto al Nord
+ // Quindi ruotiamo di (currentShowerAz - heading) gradi
+ const targetAngle = currentShowerAz - heading;
+ $("targetContainer").style.transform = `rotate(${targetAngle}deg)`;
 }
+
 function handleOrientation(e){
  let h;
  if(typeof e.webkitCompassHeading==="number") h=e.webkitCompassHeading;
@@ -156,6 +278,7 @@ function handleOrientation(e){
  setHeading(h);
  $("status").textContent="Bussola attiva · muovi lentamente il telefono per calibrare";
 }
+
 async function startSensors(){
  $("status").textContent="Richiedo permessi…";
  if(location.protocol!=="https:" && location.hostname!=="localhost"){
@@ -177,9 +300,11 @@ async function startSensors(){
    $("status").textContent="Sensori attivi";
  }catch(e){$("status").textContent="Orientamento non disponibile: "+e.message}
 }
+
 $("start").onclick=startSensors;
 $("cal").onclick=()=>{$("status").textContent="Calibrazione: fai lentamente una rotazione completa a forma di 8."};
 $("nightBtn").onclick=()=>{night=!night;$("redfilter").style.display=night?"block":"none";$("nightBtn").textContent=night?"⚫ NORMALE":"🔴 NOTTE"};
+
 updateSky();
 setInterval(updateSky,60000);
 if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
