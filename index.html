@@ -20,30 +20,34 @@ main{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
 .compassWrap{position:relative;flex:1;min-height:250px;display:grid;place-items:center;overflow:hidden;border:1px solid #3d0c0c;border-radius:18px;background:radial-gradient(circle,#160303 0,#060000 62%,#000 100%)}
 .compass{width:min(82vw,390px);height:min(82vw,390px);max-height:55vh;border:2px solid #8d2828;border-radius:50%;position:relative;display:grid;place-items:center;box-shadow:0 0 30px #240000 inset}
 .compass:before{content:"";position:absolute;inset:8%;border:1px solid #451313;border-radius:50%}
-.tick{position:absolute;inset:0;text-align:center;font-weight:800;font-size:15px}.n{position:absolute;top:8px;left:50%;transform:translateX(-50%)}.e{position:absolute;right:12px;top:50%;transform:translateY(-50%)}.s{position:absolute;bottom:8px;left:50%;transform:translateX(-50%)}.w{position:absolute;left:12px;top:50%;transform:translateY(-50%)}
 
-/* MODIFICA 1: Contenitore per la freccia che ruota */
-.arrow-container {
+/* MODIFICA 1: Il quadrante (tick) ora ruota */
+.tick-container {
     position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
+    inset: 0;
     transition: transform 0.12s linear;
     pointer-events: none;
 }
+.tick{position:absolute;inset:0;text-align:center;font-weight:800;font-size:15px}
+.n{position:absolute;top:8px;left:50%;transform:translateX(-50%)}
+.e{position:absolute;right:12px;top:50%;transform:translateY(-50%)}
+.s{position:absolute;bottom:8px;left:50%;transform:translateX(-50%)}
+.w{position:absolute;left:12px;top:50%;transform:translateY(-50%)}
 
-.arrow{
-    position:absolute;
-    width:0;
-    height:0;
-    border-left:13px solid transparent;
-    border-right:13px solid transparent;
-    border-bottom:90px solid var(--red);
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-100%);
-    filter:drop-shadow(0 0 7px #f00)
+/* MODIFICA 2: La freccia è fissa e punta sempre verso l'alto */
+.arrow-fixed {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 13px solid transparent;
+    border-right: 13px solid transparent;
+    border-bottom: 90px solid var(--red);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    filter: drop-shadow(0 0 7px #f00);
+    z-index: 10;
+    pointer-events: none;
 }
 .center{text-align:center;font-size:28px;font-weight:900;position:relative;z-index:2;background:rgba(0,0,0,0.5);padding:4px 12px;border-radius:8px}
 .bearing{font-size:13px;margin-top:4px}.target{position:absolute;bottom:10px;left:10px;right:10px;text-align:center;font-size:12px;background:#0d0202dd;padding:7px;border-radius:9px;z-index:5}
@@ -59,11 +63,17 @@ main{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
 <main>
 <div class="compassWrap">
   <div class="compass" id="compass">
-    <div class="tick"><span class="n">N</span><span class="e">E</span><span class="s">S</span><span class="w">O</span></div>
-    <!-- MODIFICA 2: La freccia ora è dentro un contenitore che ruota -->
-    <div class="arrow-container" id="arrowContainer">
-        <div class="arrow"></div>
+    <!-- Il quadrante ruota -->
+    <div class="tick-container" id="tickContainer">
+        <div class="tick">
+            <span class="n">N</span>
+            <span class="e">E</span>
+            <span class="s">S</span>
+            <span class="w">O</span>
+        </div>
     </div>
+    <!-- La freccia rimane fissa verso l'alto -->
+    <div class="arrow-fixed"></div>
     <div><div class="center" id="heading">--°</div><div class="bearing" id="dir">Attendo bussola…</div></div>
     <div class="target" id="target">Calcolo della direzione meteorica…</div>
   </div>
@@ -134,10 +144,9 @@ function setHeading(h){
  heading=(h+360)%360;
  $("heading").textContent=Math.round(heading)+"°";
  $("dir").textContent=cardinal(heading);
- // MODIFICA 3: Ora ruota SOLO la freccia, non tutto il compasso
- // La freccia deve puntare verso l'alto (0°) quando heading = 0 (Nord)
- // Quindi ruotiamo di 'heading' gradi
- $("arrowContainer").style.transform = `rotate(${heading}deg)`;
+ // MODIFICA: Ora ruota SOLO il quadrante (N, E, S, O)
+ // Il quadrante deve ruotare in senso antiorario rispetto alla bussola
+ $("tickContainer").style.transform = `rotate(${-heading}deg)`;
 }
 function handleOrientation(e){
  let h;
