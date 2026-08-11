@@ -34,17 +34,17 @@ main{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
 .s{position:absolute;bottom:8px;left:50%;transform:translateX(-50%)}
 .w{position:absolute;left:12px;top:50%;transform:translateY(-50%)}
 
-/* Freccia più chiara (bianca/azzurra) per contrasto */
+/* MODIFICA 1: Freccia più corta e spostata verso l'alto */
 .arrow-fixed {
     position: absolute;
     width: 0;
     height: 0;
-    border-left: 15px solid transparent;
-    border-right: 15px solid transparent;
-    border-bottom: 100px solid var(--cyan);
-    top: 50%;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-bottom: 70px solid var(--cyan); /* Ridotto da 100px a 70px */
+    top: 15%; /* Spostata più in alto */
     left: 50%;
-    transform: translate(-50%, -100%);
+    transform: translate(-50%, -50%);
     filter: drop-shadow(0 0 12px rgba(79, 195, 247, 0.6));
     z-index: 10;
     pointer-events: none;
@@ -57,32 +57,33 @@ main{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 20px solid var(--cyan);
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 18px solid var(--cyan);
 }
 
-/* Centro con i gradi - ora in bianco/gold per leggibilità */
+/* MODIFICA 2: Testo dei gradi spostato più in basso */
 .center{
     text-align:center;
-    font-size:32px;
+    font-size:28px;
     font-weight:900;
     position:relative;
-    z-index:2;
-    background:rgba(0,0,0,0.7);
-    padding:6px 16px;
-    border-radius:12px;
+    z-index:5;
+    background:rgba(0,0,0,0.8);
+    padding:4px 14px;
+    border-radius:10px;
     color:var(--gold);
     text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    margin-top: 30px; /* Spostato più in basso */
 }
 .bearing{
-    font-size:14px;
-    margin-top:4px;
+    font-size:13px;
+    margin-top:2px;
     color:var(--cyan);
     font-weight:600;
 }
 
-/* Target / Indicatore dello sciame - ora ruota con il quadrante */
+/* Indicatore dello sciame */
 .target-container {
     position: absolute;
     inset: 0;
@@ -94,45 +95,40 @@ main{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 85%;
-    height: 85%;
+    width: 75%;
+    height: 75%;
     border-radius: 50%;
-    border: 3px dashed rgba(255, 215, 0, 0.3);
+    border: 2px dashed rgba(255, 215, 0, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 .target-label {
     position: absolute;
-    top: -12px;
+    top: -10px;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(0,0,0,0.85);
     color: var(--gold);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
-    padding: 2px 10px;
-    border-radius: 12px;
+    padding: 2px 8px;
+    border-radius: 10px;
     border: 1px solid var(--gold);
     white-space: nowrap;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
 }
 .target-marker {
     position: absolute;
-    top: -3px;
+    top: -2px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 14px solid var(--gold);
-    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
-}
-
-/* Target inferiore (testo) - rimosso perché ora c'è l'indicatore grafico */
-.target-text {
-    display: none;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 12px solid var(--gold);
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4));
 }
 
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
@@ -171,11 +167,11 @@ main{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
         </div>
     </div>
     
-    <!-- Freccia fissa (ora azzurra) -->
+    <!-- Freccia fissa (ora più corta e in alto) -->
     <div class="arrow-fixed"></div>
     
-    <!-- Centro con gradi -->
-    <div>
+    <!-- Centro con gradi (spostato più in basso) -->
+    <div style="position:relative; z-index:5; margin-top: 35px;">
         <div class="center" id="heading">--°</div>
         <div class="bearing" id="dir">Attendo bussola…</div>
     </div>
@@ -195,7 +191,7 @@ main{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
 <script>
 const $=id=>document.getElementById(id);
 let heading=0, lat=null, lon=null, watch=null, night=false;
-let currentShowerAz = 45; // Default
+let currentShowerAz = 45;
 
 const showers=[
  {name:"Quadrantidi",peak:[1,4],active:[12,28,1,12],rate:25,az:45},
@@ -260,12 +256,8 @@ function setHeading(h){
  $("heading").textContent=Math.round(heading)+"°";
  $("dir").textContent=cardinal(heading);
  
- // Ruota il quadrante (N, E, S, O)
  $("tickContainer").style.transform = `rotate(${-heading}deg)`;
  
- // Ruota l'indicatore dello sciame nella posizione corretta
- // Deve essere posizionato all'azimut dello sciame rispetto al Nord
- // Quindi ruotiamo di (currentShowerAz - heading) gradi
  const targetAngle = currentShowerAz - heading;
  $("targetContainer").style.transform = `rotate(${targetAngle}deg)`;
 }
