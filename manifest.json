@@ -1,0 +1,12 @@
+{
+  "name":"Cacciatore di Stelle Cadenti",
+  "short_name":"Stelle Cadenti",
+  "start_url":"./",
+  "display":"standalone",
+  "background_color":"#030000",
+  "theme_color":"#050000",
+  "orientation":"portrait",
+  "icons":[
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
