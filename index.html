@@ -34,35 +34,51 @@ main{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
 .s{position:absolute;bottom:8px;left:50%;transform:translateX(-50%)}
 .w{position:absolute;left:12px;top:50%;transform:translateY(-50%)}
 
-/* MODIFICA 1: Freccia più corta e spostata verso l'alto */
+/* MODIFICA: Nuova freccia a punta */
 .arrow-fixed {
     position: absolute;
-    width: 0;
-    height: 0;
-    border-left: 14px solid transparent;
-    border-right: 14px solid transparent;
-    border-bottom: 70px solid var(--cyan); /* Ridotto da 100px a 70px */
-    top: 15%; /* Spostata più in alto */
+    width: 4px;
+    height: 65px;
+    background: var(--cyan);
+    top: 15%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    filter: drop-shadow(0 0 12px rgba(79, 195, 247, 0.6));
+    transform: translateX(-50%);
     z-index: 10;
     pointer-events: none;
+    box-shadow: 0 0 15px rgba(79, 195, 247, 0.3);
+    border-radius: 2px;
 }
-.arrow-fixed:after {
+
+/* Punta della freccia (triangolo verso l'alto) */
+.arrow-fixed:before {
     content: '';
     position: absolute;
-    top: 100%;
+    top: -12px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-top: 18px solid var(--cyan);
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 16px solid var(--cyan);
+    filter: drop-shadow(0 -4px 8px rgba(79, 195, 247, 0.3));
 }
 
-/* MODIFICA 2: Testo dei gradi spostato più in basso */
+/* Base della freccia (pallino) */
+.arrow-fixed:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    background: var(--cyan);
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(79, 195, 247, 0.3);
+}
+
+/* Testo dei gradi */
 .center{
     text-align:center;
     font-size:28px;
@@ -74,7 +90,7 @@ main{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
     border-radius:10px;
     color:var(--gold);
     text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-    margin-top: 30px; /* Spostato più in basso */
+    margin-top: 30px;
 }
 .bearing{
     font-size:13px;
@@ -167,10 +183,10 @@ main{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
         </div>
     </div>
     
-    <!-- Freccia fissa (ora più corta e in alto) -->
+    <!-- Nuova freccia a punta -->
     <div class="arrow-fixed"></div>
     
-    <!-- Centro con gradi (spostato più in basso) -->
+    <!-- Centro con gradi -->
     <div style="position:relative; z-index:5; margin-top: 35px;">
         <div class="center" id="heading">--°</div>
         <div class="bearing" id="dir">Attendo bussola…</div>
