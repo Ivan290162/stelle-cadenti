@@ -1,18 +1,33 @@
 <!doctype html>
 <html lang="it">
+
 <head>
+
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,
+               viewport-fit=cover,user-scalable=no">
+
 <meta name="theme-color" content="#050000">
+
 <meta name="mobile-web-app-capable" content="yes">
+
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<meta name="apple-mobile-web-app-status-bar-style"
+      content="black">
 
 <title>Cacciatore di Stelle Cadenti</title>
 
 <link rel="manifest" href="manifest.json">
 
+
 <style>
+
+/* =========================================================
+   COLORI
+   ========================================================= */
 
 :root{
     --red:#ff4b4b;
@@ -23,6 +38,11 @@
     --cyan:#4fc3f7;
 }
 
+
+/* =========================================================
+   BASE
+   ========================================================= */
+
 *{
     box-sizing:border-box
 }
@@ -31,7 +51,8 @@ html,body{
     margin:0;
     background:var(--bg);
     color:var(--red);
-    font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+    font-family:system-ui,-apple-system,
+                 Segoe UI,sans-serif;
     height:100%;
     overflow:hidden
 }
@@ -44,8 +65,16 @@ body{
     height:100%;
     display:flex;
     flex-direction:column;
-    padding:env(safe-area-inset-top) 12px env(safe-area-inset-bottom)
+    padding:
+        env(safe-area-inset-top)
+        12px
+        env(safe-area-inset-bottom)
 }
+
+
+/* =========================================================
+   TESTATA
+   ========================================================= */
 
 header{
     display:flex;
@@ -74,6 +103,11 @@ button{
     font-weight:700
 }
 
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
 main{
     flex:1;
     display:flex;
@@ -81,6 +115,7 @@ main{
     gap:8px;
     min-height:0
 }
+
 
 /* =========================================================
    QUADRANTE
@@ -90,38 +125,53 @@ main{
     position:relative;
     flex:1;
     min-height:250px;
+
     display:grid;
     place-items:center;
+
     overflow:hidden;
+
     border:1px solid #3d0c0c;
     border-radius:18px;
-    background:radial-gradient(
-        circle,
-        #160303 0,
-        #060000 62%,
-        #000 100%
-    )
+
+    background:
+        radial-gradient(
+            circle,
+            #160303 0,
+            #060000 62%,
+            #000 100%
+        )
 }
 
 .compass{
     width:min(82vw,390px);
     height:min(82vw,390px);
+
     max-height:55vh;
+
     border:2px solid #8d2828;
     border-radius:50%;
+
     position:relative;
+
     display:grid;
     place-items:center;
-    box-shadow:0 0 30px #240000 inset
+
+    box-shadow:
+        0 0 30px #240000 inset
 }
 
 .compass:before{
     content:"";
+
     position:absolute;
+
     inset:8%;
+
     border:1px solid #451313;
     border-radius:50%
 }
+
 
 /* =========================================================
    QUADRANTE CHE RUOTA
@@ -130,16 +180,21 @@ main{
 .tick-container{
     position:absolute;
     inset:0;
+
     transition:transform .12s linear;
+
     pointer-events:none
 }
 
 .tick{
     position:absolute;
     inset:0;
+
     text-align:center;
+
     font-weight:800;
     font-size:15px;
+
     color:var(--gold)
 }
 
@@ -147,6 +202,7 @@ main{
     position:absolute;
     top:8px;
     left:50%;
+
     transform:translateX(-50%)
 }
 
@@ -154,6 +210,7 @@ main{
     position:absolute;
     right:12px;
     top:50%;
+
     transform:translateY(-50%)
 }
 
@@ -161,6 +218,7 @@ main{
     position:absolute;
     bottom:8px;
     left:50%;
+
     transform:translateX(-50%)
 }
 
@@ -168,59 +226,87 @@ main{
     position:absolute;
     left:12px;
     top:50%;
+
     transform:translateY(-50%)
 }
 
+
 /* =========================================================
    FRECCIA FISSA
-   Non parte dal centro per non coprire i gradi
+   Non parte dal centro
    ========================================================= */
 
 .arrow-fixed{
     position:absolute;
+
     width:3px;
     height:65px;
+
     background:var(--cyan);
+
     top:13%;
     left:50%;
+
     transform:translateX(-50%);
+
     z-index:10;
+
     pointer-events:none;
-    box-shadow:0 0 12px rgba(79,195,247,.35);
+
+    box-shadow:
+        0 0 12px rgba(79,195,247,.35);
+
     border-radius:2px
 }
+
 
 /* Punta */
 
 .arrow-fixed:before{
     content:"";
+
     position:absolute;
+
     top:-1px;
     left:50%;
+
     transform:translateX(-50%);
+
     width:0;
     height:0;
+
     border-left:7px solid transparent;
     border-right:7px solid transparent;
     border-bottom:13px solid var(--cyan);
-    filter:drop-shadow(
-        0 0 6px rgba(79,195,247,.35)
-    )
+
+    filter:
+        drop-shadow(
+            0 0 6px
+            rgba(79,195,247,.35)
+        )
 }
 
-/* Piccolo punto alla base */
+
+/* Punto alla base */
 
 .arrow-fixed:after{
     content:"";
+
     position:absolute;
+
     bottom:-3px;
     left:50%;
+
     transform:translateX(-50%);
+
     width:5px;
     height:5px;
+
     background:var(--cyan);
+
     border-radius:50%
 }
+
 
 /* =========================================================
    CENTRO
@@ -228,88 +314,147 @@ main{
 
 .center-container{
     position:relative;
+
     z-index:5;
+
     display:flex;
     flex-direction:column;
+
     align-items:center;
     justify-content:center;
+
     margin-top:15px
 }
 
 .center{
     text-align:center;
+
     font-size:32px;
     font-weight:900;
+
     color:var(--gold);
-    text-shadow:0 0 30px rgba(255,215,0,.4);
+
+    text-shadow:
+        0 0 30px
+        rgba(255,215,0,.4);
+
     line-height:1;
+
     padding:0;
+
     background:transparent
 }
 
 .bearing{
     font-size:14px;
+
     color:var(--cyan);
+
     font-weight:600;
-    text-shadow:0 0 20px rgba(79,195,247,.3);
+
+    text-shadow:
+        0 0 20px
+        rgba(79,195,247,.3);
+
     margin-top:4px
 }
 
+
 /* =========================================================
-   INDICATORE RADiante
+   INDICATORE RADIANTE
    ========================================================= */
 
 .target-container{
     position:absolute;
     inset:0;
+
     pointer-events:none;
-    transition:transform .12s linear
+
+    transition:
+        transform .12s linear
 }
 
 .target-indicator{
     position:absolute;
+
     top:50%;
     left:50%;
-    transform:translate(-50%,-50%);
+
+    transform:
+        translate(-50%,-50%);
+
     width:75%;
     height:75%;
+
     border-radius:50%;
-    border:2px dashed rgba(255,215,0,.25);
+
+    border:
+        2px dashed
+        rgba(255,215,0,.25);
+
     display:flex;
+
     align-items:center;
     justify-content:center
 }
 
 .target-label{
     position:absolute;
+
     top:-10px;
     left:50%;
-    transform:translateX(-50%);
-    background:rgba(0,0,0,.85);
+
+    transform:
+        translateX(-50%);
+
+    background:
+        rgba(0,0,0,.85);
+
     color:var(--gold);
+
     font-size:10px;
     font-weight:700;
+
     padding:2px 8px;
+
     border-radius:10px;
-    border:1px solid var(--gold);
+
+    border:
+        1px solid
+        var(--gold);
+
     white-space:nowrap;
-    box-shadow:0 0 15px rgba(255,215,0,.15)
+
+    box-shadow:
+        0 0 15px
+        rgba(255,215,0,.15)
 }
 
 .target-marker{
     position:absolute;
+
     top:-2px;
     left:50%;
-    transform:translateX(-50%);
+
+    transform:
+        translateX(-50%);
+
     width:0;
     height:0;
+
     border-left:6px solid transparent;
     border-right:6px solid transparent;
-    border-top:12px solid var(--gold);
-    filter:drop-shadow(
-        0 0 8px rgba(255,215,0,.4)
-    )
+
+    border-top:
+        12px solid var(--gold);
+
+    filter:
+        drop-shadow(
+            0 0 8px
+            rgba(255,215,0,.4)
+        )
 }
+
 
 /* =========================================================
    CARDS
@@ -317,47 +462,67 @@ main{
 
 .grid{
     display:grid;
-    grid-template-columns:1fr 1fr;
+
+    grid-template-columns:
+        1fr 1fr;
+
     gap:8px;
+
     margin-top:4px
 }
 
 .card{
     background:var(--panel);
-    border:1px solid #3d0c0c;
+
+    border:
+        1px solid #3d0c0c;
+
     border-radius:12px;
+
     padding:10px
 }
 
 .label{
     font-size:10px;
+
     opacity:.7;
+
     text-transform:uppercase
 }
 
 .value{
     font-size:16px;
+
     font-weight:800;
+
     margin-top:3px;
+
     color:var(--gold)
 }
 
 .small{
     font-size:11px;
+
     line-height:1.35;
+
     color:#aaa
 }
 
 .status{
     font-size:11px;
+
     min-height:16px;
+
     text-align:center;
+
     color:var(--cyan)
 }
 
 .controls{
     display:flex;
+
     gap:7px;
+
     margin-top:4px
 }
 
@@ -367,11 +532,17 @@ main{
 
 .redfilter{
     position:fixed;
+
     inset:0;
-    background:rgba(255,0,0,.10);
+
+    background:
+        rgba(255,0,0,.10);
+
     pointer-events:none;
+
     mix-blend-mode:multiply
 }
+
 
 @media(min-width:700px){
 
@@ -387,19 +558,27 @@ main{
 }
 
 </style>
+
 </head>
+
 
 <body>
 
 <div class="app">
 
+
 <header>
 
     <div>
-        <h1>🌠 Cacciatore di Stelle Cadenti</h1>
+
+        <h1>
+            🌠 Cacciatore di Stelle Cadenti
+        </h1>
+
         <div class="sub">
             Punta il telefono verso il cielo
         </div>
+
     </div>
 
     <button id="nightBtn">
@@ -408,17 +587,23 @@ main{
 
 </header>
 
+
 <main>
+
 
 <div class="compassWrap">
 
+
     <div class="compass" id="compass">
+
 
         <!-- =================================================
              QUADRANTE
              ================================================= -->
 
-        <div class="tick-container" id="tickContainer">
+        <div
+            class="tick-container"
+            id="tickContainer">
 
             <div class="tick">
 
@@ -436,13 +621,19 @@ main{
              INDICATORE DEL RADIANTE
              ================================================= -->
 
-        <div class="target-container" id="targetContainer">
+        <div
+            class="target-container"
+            id="targetContainer">
 
-            <div class="target-indicator" id="targetIndicator">
+            <div
+                class="target-indicator"
+                id="targetIndicator">
 
                 <div class="target-marker"></div>
 
-                <div class="target-label" id="targetLabel">
+                <div
+                    class="target-label"
+                    id="targetLabel">
                     Perseidi
                 </div>
 
@@ -464,15 +655,20 @@ main{
 
         <div class="center-container">
 
-            <div class="center" id="heading">
+            <div
+                class="center"
+                id="heading">
                 --°
             </div>
 
-            <div class="bearing" id="dir">
+            <div
+                class="bearing"
+                id="dir">
                 Attendo bussola…
             </div>
 
         </div>
+
 
     </div>
 
@@ -499,22 +695,31 @@ main{
 
 <div class="grid">
 
+
+    <!-- POSIZIONE -->
+
     <div class="card">
 
         <div class="label">
             Posizione
         </div>
 
-        <div class="value" id="gps">
+        <div
+            class="value"
+            id="gps">
             --
         </div>
 
-        <div class="small" id="place">
+        <div
+            class="small"
+            id="place">
             GPS non attivo
         </div>
 
     </div>
 
+
+    <!-- LUNA -->
 
     <div class="card">
 
@@ -522,16 +727,22 @@ main{
             Luna
         </div>
 
-        <div class="value" id="moon">
+        <div
+            class="value"
+            id="moon">
             --
         </div>
 
-        <div class="small" id="moonInfo">
+        <div
+            class="small"
+            id="moonInfo">
             --
         </div>
 
     </div>
 
+
+    <!-- SCIAME -->
 
     <div class="card">
 
@@ -539,16 +750,22 @@ main{
             Sciame attivo
         </div>
 
-        <div class="value" id="shower">
+        <div
+            class="value"
+            id="shower">
             --
         </div>
 
-        <div class="small" id="showerInfo">
+        <div
+            class="small"
+            id="showerInfo">
             --
         </div>
 
     </div>
 
+
+    <!-- RADIANTE -->
 
     <div class="card">
 
@@ -556,17 +773,23 @@ main{
             Radiante
         </div>
 
-        <div class="value" id="best">
+        <div
+            class="value"
+            id="best">
             --
         </div>
 
-        <div class="small" id="bestInfo">
+        <div
+            class="small"
+            id="bestInfo">
             --
         </div>
 
     </div>
 
+
 </div>
+
 
 </main>
 
@@ -582,11 +805,13 @@ main{
 
 <script>
 
+
 /* ============================================================
    RIFERIMENTO RAPIDO AL DOM
    ============================================================ */
 
-const $ = id => document.getElementById(id);
+const $ =
+    id => document.getElementById(id);
 
 
 /* ============================================================
@@ -602,7 +827,7 @@ let watch = null;
 
 let night = false;
 
-let currentShowerAz = 45;
+let currentShowerAz = 0;
 
 let currentShowerAltitude = null;
 
@@ -610,6 +835,14 @@ let currentShowerAltitude = null;
 /* ============================================================
    SCIAMI METEORICI
    ============================================================ */
+
+/*
+ * I valori RA/DEC dei principali sciami sono riferiti
+ * approssimativamente alla zona del massimo.
+ *
+ * PER LE PERSEIDI utilizziamo invece una funzione
+ * specifica che tiene conto del radiant drift.
+ */
 
 const showers = [
 
@@ -655,15 +888,18 @@ const showers = [
 
     {
         name:"Perseidi",
-        peak:[8,12],
+        peak:[8,13],
         active:[7,17,8,24],
         rate:100,
 
         /*
-         * Coordinate approssimative del radiante
+         * Valore di riferimento IMO:
          *
-         * RA  = circa 48°
-         * Dec = circa +58°
+         * RA 48°
+         * DEC +58°
+         *
+         * Il valore effettivo viene calcolato
+         * dalla funzione perseidRadiant().
          */
 
         ra:48,
@@ -688,7 +924,7 @@ const showers = [
         active:[11,6,11,30],
         rate:15,
         az:80,
-        ra:153,
+        ra:152,
         dec:22
     },
 
@@ -737,9 +973,7 @@ function dayOfYear(d){
                 0,
                 0
             )
-        )
-
-        / 86400000
+        ) / 86400000
 
     );
 
@@ -755,34 +989,39 @@ function activeShower(){
     const d = new Date();
 
     const m = d.getMonth() + 1;
+
     const day = d.getDate();
 
 
-    let candidates = showers.filter(s => {
+    let candidates =
+        showers.filter(s => {
 
-        let [m1,d1,m2,d2] = s.active;
+            let [m1,d1,m2,d2] =
+                s.active;
 
 
-        if(m1 === m2){
+            if(m1 === m2){
+
+                return (
+                    m === m1 &&
+                    day >= d1 &&
+                    day <= d2
+                );
+
+            }
+
 
             return (
-                m === m1 &&
-                day >= d1 &&
-                day <= d2
+
+                (m === m1 && day >= d1)
+
+                ||
+
+                (m === m2 && day <= d2)
+
             );
 
-        }
-
-
-        return (
-
-            (m === m1 && day >= d1) ||
-
-            (m === m2 && day <= d2)
-
-        );
-
-    });
+        });
 
 
     if(!candidates.length){
@@ -798,7 +1037,9 @@ function activeShower(){
 
         Math.abs(
 
-            dayOfYear(d) -
+            dayOfYear(d)
+
+            -
 
             dayOfYear(
 
@@ -816,7 +1057,9 @@ function activeShower(){
 
         Math.abs(
 
-            dayOfYear(d) -
+            dayOfYear(d)
+
+            -
 
             dayOfYear(
 
@@ -836,166 +1079,258 @@ function activeShower(){
 
 
 /* ============================================================
-   FASE LUNARE
+   ⭐ MOTO DEL RADIANTE DELLE PERSEIDI
    ============================================================ */
 
-function moonPhase(date){
+/*
+ * Dati IMO 2026:
+ *
+ * 20 luglio   RA 11°  DEC +52°
+ * 25 luglio   RA 22°  DEC +53°
+ * 30 luglio   RA 29°  DEC +54°
+ * 05 agosto   RA 37°  DEC +56°
+ * 10 agosto   RA 45°  DEC +57°
+ * 15 agosto   RA 51°  DEC +58°
+ * 20 agosto   RA 57°  DEC +58°
+ *
+ * Interpoliamo linearmente tra i punti.
+ */
 
-    const syn = 29.530588853;
 
-    const ref = new Date(
-        Date.UTC(
-            2000,
-            0,
+const perseidDrift = [
+
+    [7,20,11,52],
+
+    [7,25,22,53],
+
+    [7,30,29,54],
+
+    [8,5,37,56],
+
+    [8,10,45,57],
+
+    [8,15,51,58],
+
+    [8,20,57,58],
+
+    [8,25,63,58]
+
+];
+
+
+/*
+ * Interpolazione.
+ */
+
+function interpolate(a,b,x){
+
+    return a +
+        (b-a) *
+        ((x) / (b));
+
+}
+
+
+/*
+ * Restituisce RA e DEC delle Perseidi
+ * per il giorno corrente.
+ */
+
+function perseidRadiant(date){
+
+    const year =
+        date.getFullYear();
+
+
+    const start =
+        new Date(
+            year,
             6,
-            18,
-            14,
-            0
-        )
-    );
+            20
+        );
 
 
-    let age =
-        ((date - ref) / 86400000) % syn;
+    const end =
+        new Date(
+            year,
+            7,
+            25
+        );
 
 
-    if(age < 0){
+    /*
+     * Giorno dell'anno.
+     */
 
-        age += syn;
+    const current =
+        dayOfYear(date);
+
+
+    /*
+     * Convertiamo le date della tabella
+     * in giorno dell'anno.
+     */
+
+    let points =
+        perseidDrift.map(p => {
+
+            const d =
+                new Date(
+                    year,
+                    p[0]-1,
+                    p[1]
+                );
+
+            return {
+                day:dayOfYear(d),
+                ra:p[2],
+                dec:p[3]
+            };
+
+        });
+
+
+    /*
+     * Prima del primo punto.
+     */
+
+    if(current <= points[0].day){
+
+        return {
+            ra:points[0].ra,
+            dec:points[0].dec
+        };
 
     }
 
 
-    const frac = age / syn;
+    /*
+     * Dopo l'ultimo punto.
+     */
+
+    if(current >= points[points.length-1].day){
+
+        return {
+            ra:points[points.length-1].ra,
+            dec:points[points.length-1].dec
+        };
+
+    }
 
 
-    const illum =
-        (1 - Math.cos(2*Math.PI*frac)) / 2;
+    /*
+     * Troviamo i due punti
+     * tra i quali interpolare.
+     */
+
+    for(let i=0;i<points.length-1;i++){
+
+        const p1 = points[i];
+
+        const p2 = points[i+1];
 
 
-    let name =
+        if(
+            current >= p1.day &&
+            current <= p2.day
+        ){
 
-        frac < .0625 ? "Luna nuova" :
+            const f =
+                (current-p1.day) /
+                (p2.day-p1.day);
 
-        frac < .1875 ? "Falce crescente" :
 
-        frac < .3125 ? "Primo quarto" :
+            return {
 
-        frac < .4375 ? "Gibbosa crescente" :
+                ra:
+                    p1.ra +
+                    (p2.ra-p1.ra)*f,
 
-        frac < .5625 ? "Luna piena" :
+                dec:
+                    p1.dec +
+                    (p2.dec-p1.dec)*f
 
-        frac < .6875 ? "Gibbosa calante" :
+            };
 
-        frac < .8125 ? "Ultimo quarto" :
+        }
 
-        frac < .9375 ? "Falce calante" :
-
-        "Luna nuova";
+    }
 
 
     return {
-        name,
-        illum,
-        age
+        ra:48,
+        dec:58
     };
 
 }
 
 
 /* ============================================================
-   DIREZIONE CARDINALE
+   JULIAN DATE
    ============================================================ */
 
-function cardinal(deg){
+function julianDate(date){
 
-    let a = [
-        "N",
-        "NE",
-        "E",
-        "SE",
-        "S",
-        "SO",
-        "O",
-        "NO"
-    ];
-
-    return a[
-        Math.round(deg / 45) % 8
-    ];
+    return (
+        date.getTime() /
+        86400000
+    ) + 2440587.5;
 
 }
 
 
 /* ============================================================
-   ❤️ CUORE ASTRONOMICO
+   TEMPO SIDERale LOCALE
    ============================================================ */
 
+function localSiderealTime(date,lon){
 
-/*
- * Julian Date
- *
- * Trasforma la data normale in Giorno Giuliano.
- */
+    const jd =
+        julianDate(date);
 
-function julianDate(date){
-
-    return date.getTime() / 86400000
-           + 2440587.5;
-
-}
-
-
-/*
- * Tempo siderale locale
- *
- * Restituisce il tempo siderale locale
- * espresso in gradi.
- */
-
-function localSiderealTime(date, lon){
-
-    const jd = julianDate(date);
 
     const T =
-        (jd - 2451545.0) / 36525;
+        (jd-2451545.0)/36525;
 
 
     let gst =
 
-        280.46061837 +
+        280.46061837
+
+        +
 
         360.98564736629 *
-        (jd - 2451545.0) +
+        (jd-2451545.0)
 
-        0.000387933 * T * T -
+        +
 
-        T * T * T / 38710000;
+        0.000387933 *
+        T*T
+
+        -
+
+        T*T*T /
+        38710000;
 
 
     gst =
-        ((gst % 360) + 360) % 360;
+        ((gst % 360)+360)%360;
 
 
-    let lst = gst + lon;
+    let lst =
+        gst + lon;
 
 
     return (
-        (lst % 360) + 360
-    ) % 360;
+        (lst%360)+360
+    )%360;
 
 }
 
 
-/*
- * Trasforma:
- *
- * RA + Dec
- *
- * in:
- *
- * Azimut + Altezza
- */
+/* ============================================================
+   RA + DEC → AZIMUT + ALTEZZA
+   ============================================================ */
 
 function radiantPosition(
     ra,
@@ -1006,18 +1341,14 @@ function radiantPosition(
 ){
 
     const RA =
-        ra * Math.PI / 180;
+        ra*Math.PI/180;
 
     const DEC =
-        dec * Math.PI / 180;
+        dec*Math.PI/180;
 
     const LAT =
-        lat * Math.PI / 180;
+        lat*Math.PI/180;
 
-
-    /*
-     * Tempo siderale locale
-     */
 
     const lst =
         localSiderealTime(
@@ -1031,45 +1362,54 @@ function radiantPosition(
      */
 
     let Hdeg =
-        lst - ra;
+        lst-ra;
 
 
     Hdeg =
-        ((Hdeg + 540) % 360) - 180;
+        ((Hdeg+540)%360)-180;
 
 
     const H =
-        Hdeg * Math.PI / 180;
+        Hdeg*Math.PI/180;
 
 
     /*
-     * ==========================
      * ALTEZZA
-     * ==========================
      */
 
     const sinAlt =
 
-        Math.sin(LAT) *
+        Math.sin(LAT)*
         Math.sin(DEC)
 
         +
 
-        Math.cos(LAT) *
-        Math.cos(DEC) *
+        Math.cos(LAT)*
+        Math.cos(DEC)*
         Math.cos(H);
 
 
     const altitude =
 
-        Math.asin(sinAlt) *
-        180 / Math.PI;
+        Math.asin(
+            Math.max(
+                -1,
+                Math.min(
+                    1,
+                    sinAlt
+                )
+            )
+        )
+        *180/Math.PI;
 
 
     /*
-     * ==========================
      * AZIMUT
-     * ==========================
+     *
+     * 0° = Nord
+     * 90° = Est
+     * 180° = Sud
+     * 270° = Ovest
      */
 
     const y =
@@ -1078,19 +1418,19 @@ function radiantPosition(
 
     const x =
 
-        Math.cos(H) *
+        Math.cos(H)*
         Math.sin(LAT)
 
         -
 
-        Math.tan(DEC) *
+        Math.tan(DEC)*
         Math.cos(LAT);
 
 
     let azimuth =
 
-        Math.atan2(y,x) *
-        180 / Math.PI
+        Math.atan2(y,x)*
+        180/Math.PI
 
         +
 
@@ -1098,7 +1438,7 @@ function radiantPosition(
 
 
     azimuth =
-        (azimuth + 360) % 360;
+        (azimuth+360)%360;
 
 
     return {
@@ -1113,20 +1453,398 @@ function radiantPosition(
 
 
 /* ============================================================
+   ☀️ POSIZIONE APPARENTE DEL SOLE
+   ============================================================ */
+
+/*
+ * Algoritmo astronomico compatto.
+ *
+ * Serve soprattutto per ottenere la geometria
+ * Sole-Luna e quindi l'illuminazione lunare.
+ */
+
+function sunLongitude(date){
+
+    const jd =
+        julianDate(date);
+
+
+    const d =
+        jd-2451543.5;
+
+
+    let w =
+        282.9404 +
+        4.70935e-5*d;
+
+
+    let M =
+        356.0470 +
+        0.9856002585*d;
+
+
+    M =
+        ((M%360)+360)%360;
+
+
+    const Mrad =
+        M*Math.PI/180;
+
+
+    let E =
+        M +
+        (180/Math.PI) *
+        0.016709 *
+        Math.sin(Mrad) *
+        (1+0.016709*Math.cos(Mrad));
+
+
+    const Erad =
+        E*Math.PI/180;
+
+
+    const xv =
+        Math.cos(Erad)-0.016709;
+
+
+    const yv =
+        Math.sqrt(
+            1-0.016709*0.016709
+        ) *
+        Math.sin(Erad);
+
+
+    const v =
+        Math.atan2(yv,xv)*
+        180/Math.PI;
+
+
+    let lon =
+        v+w;
+
+
+    lon =
+        ((lon%360)+360)%360;
+
+
+    return lon;
+
+}
+
+
+/* ============================================================
+   🌙 POSIZIONE APPARENTE DELLA LUNA
+   ============================================================ */
+
+function moonLongitude(date){
+
+    const jd =
+        julianDate(date);
+
+
+    const d =
+        jd-2451543.5;
+
+
+    /*
+     * Elementi orbitali approssimati
+     */
+
+    const N =
+        125.1228 -
+        0.0529538083*d;
+
+
+    const i = 5.1454;
+
+
+    const w =
+        318.0634 +
+        0.1643573223*d;
+
+
+    const a = 60.2666;
+
+
+    const e = 0.054900;
+
+
+    let M =
+        115.3654 +
+        13.0649929509*d;
+
+
+    M =
+        ((M%360)+360)%360;
+
+
+    const Mrad =
+        M*Math.PI/180;
+
+
+    /*
+     * Equazione di Keplero
+     */
+
+    const E =
+        M +
+        (180/Math.PI) *
+        e *
+        Math.sin(Mrad) *
+        (1+e*Math.cos(Mrad));
+
+
+    const Erad =
+        E*Math.PI/180;
+
+
+    const xv =
+        a*
+        (Math.cos(Erad)-e);
+
+
+    const yv =
+        a*
+        Math.sqrt(1-e*e)*
+        Math.sin(Erad);
+
+
+    const v =
+        Math.atan2(yv,xv)*
+        180/Math.PI;
+
+
+    const r =
+        Math.sqrt(
+            xv*xv+
+            yv*yv
+        );
+
+
+    /*
+     * Coordinate eclittiche
+     */
+
+    const lon =
+        (v+w)*
+        Math.PI/180;
+
+
+    const Nrad =
+        N*Math.PI/180;
+
+
+    const irad =
+        i*Math.PI/180;
+
+
+    const xh =
+        r*
+        (
+            Math.cos(Nrad)*
+            Math.cos(lon)
+            -
+            Math.sin(Nrad)*
+            Math.sin(lon)*
+            Math.cos(irad)
+        );
+
+
+    const yh =
+        r*
+        (
+            Math.sin(Nrad)*
+            Math.cos(lon)
+            +
+            Math.cos(Nrad)*
+            Math.sin(lon)*
+            Math.cos(irad)
+        );
+
+
+    /*
+     * Longitudine eclittica apparente
+     */
+
+    let moonLon =
+        Math.atan2(
+            yh,
+            xh
+        )*
+        180/Math.PI;
+
+
+    moonLon =
+        ((moonLon%360)+360)%360;
+
+
+    return moonLon;
+
+}
+
+
+/* ============================================================
+   🌙 FASE LUNARE MIGLIORATA
+   ============================================================ */
+
+function moonPhase(date){
+
+    const sunLon =
+        sunLongitude(date);
+
+
+    const moonLon =
+        moonLongitude(date);
+
+
+    /*
+     * Elongazione Sole-Luna
+     */
+
+    let elongation =
+        moonLon-sunLon;
+
+
+    elongation =
+        ((elongation+540)%360)-180;
+
+
+    const angle =
+        Math.abs(elongation);
+
+
+    /*
+     * Illuminazione geometrica.
+     *
+     * 0°   = Luna nuova
+     * 180° = Luna piena
+     */
+
+    const illum =
+        (1-Math.cos(
+            angle*Math.PI/180
+        ))/2;
+
+
+    /*
+     * Nome della fase
+     */
+
+    let name;
+
+
+    if(angle < 10){
+
+        name =
+            "Luna nuova";
+
+    }
+
+    else if(
+        angle >= 10 &&
+        angle < 80
+    ){
+
+        name =
+            elongation > 0
+            ? "Falce crescente"
+            : "Falce calante";
+
+    }
+
+    else if(
+        angle >= 80 &&
+        angle < 100
+    ){
+
+        name =
+            elongation > 0
+            ? "Primo quarto"
+            : "Ultimo quarto";
+
+    }
+
+    else if(
+        angle >= 100 &&
+        angle < 170
+    ){
+
+        name =
+            elongation > 0
+            ? "Gibbosa crescente"
+            : "Gibbosa calante";
+
+    }
+
+    else{
+
+        name =
+            "Luna piena";
+
+    }
+
+
+    return {
+
+        name:name,
+
+        illum:illum,
+
+        elongation:angle,
+
+        sunLongitude:sunLon,
+
+        moonLongitude:moonLon
+
+    };
+
+}
+
+
+/* ============================================================
+   DIREZIONE CARDINALE
+   ============================================================ */
+
+function cardinal(deg){
+
+    const a = [
+
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SO",
+        "O",
+        "NO"
+
+    ];
+
+
+    return a[
+        Math.round(deg/45)%8
+    ];
+
+}
+
+
+/* ============================================================
    AGGIORNA IL CIELO
    ============================================================ */
 
 function updateSky(){
 
-    const s = activeShower();
+    const s =
+        activeShower();
+
 
     const moon =
         moonPhase(new Date());
 
 
-    /*
-     * Luna
-     */
+    /* ---------------------------------------------------------
+       LUNA
+       --------------------------------------------------------- */
 
     $("moon").textContent =
         moon.name;
@@ -1135,13 +1853,13 @@ function updateSky(){
     $("moonInfo").textContent =
 
         `Illuminazione circa ${
-            Math.round(moon.illum * 100)
+            (moon.illum*100).toFixed(1)
         }%`;
 
 
-    /*
-     * Nessuno sciame
-     */
+    /* ---------------------------------------------------------
+       NESSUNO SCIAME
+       --------------------------------------------------------- */
 
     if(!s){
 
@@ -1170,9 +1888,9 @@ function updateSky(){
     }
 
 
-    /*
-     * Sciame attivo
-     */
+    /* ---------------------------------------------------------
+       SCIAME ATTIVO
+       --------------------------------------------------------- */
 
     $("shower").textContent =
         s.name;
@@ -1187,18 +1905,52 @@ function updateSky(){
         } · ZHR ~${s.rate}`;
 
 
+    /* ---------------------------------------------------------
+       RADIANTE
+       --------------------------------------------------------- */
+
+    let radiantRA = s.ra;
+
+    let radiantDEC = s.dec;
+
+
     /*
-     * Se abbiamo il GPS,
-     * calcoliamo il radiante.
+     * SOLO LE PERSEIDI utilizzano
+     * il radiant drift 2026.
      */
 
-    if(lat !== null && lon !== null){
+    if(s.name === "Perseidi"){
+
+        const r =
+            perseidRadiant(
+                new Date()
+            );
+
+
+        radiantRA =
+            r.ra;
+
+
+        radiantDEC =
+            r.dec;
+
+    }
+
+
+    /* ---------------------------------------------------------
+       GPS DISPONIBILE
+       --------------------------------------------------------- */
+
+    if(
+        lat !== null &&
+        lon !== null
+    ){
 
         const result =
             radiantPosition(
 
-                s.ra,
-                s.dec,
+                radiantRA,
+                radiantDEC,
 
                 lat,
                 lon,
@@ -1224,29 +1976,28 @@ function updateSky(){
 
         $("bestInfo").textContent =
 
-            `Altezza ${result.altitude.toFixed(1)}°
-             · Radiante ${s.name}`;
+            `Altezza ${
+                result.altitude.toFixed(1)
+            }° · Radiante ${s.name}`;
 
 
         $("targetLabel").textContent =
 
-            `${s.name} ${result.azimuth.toFixed(0)}°`;
+            `${s.name}
+             ${result.azimuth.toFixed(0)}°`;
 
 
         /*
-         * Aggiorniamo anche l'indicatore
-         * se la bussola è già attiva.
+         * Aggiorna immediatamente
+         * la posizione del bersaglio.
          */
 
         setHeading(heading);
 
     }
 
-    else{
 
-        /*
-         * GPS non ancora disponibile
-         */
+    else{
 
         $("best").textContent =
             "Attendo GPS";
@@ -1271,11 +2022,11 @@ function updateSky(){
 function setHeading(h){
 
     heading =
-        (h + 360) % 360;
+        (h+360)%360;
 
 
     $("heading").textContent =
-        Math.round(heading) + "°";
+        Math.round(heading)+"°";
 
 
     $("dir").textContent =
@@ -1283,7 +2034,7 @@ function setHeading(h){
 
 
     /*
-     * Ruota solamente il quadrante
+     * Il quadrante ruota.
      */
 
     $("tickContainer").style.transform =
@@ -1292,11 +2043,12 @@ function setHeading(h){
 
 
     /*
-     * Posizione apparente del radiante
+     * Il bersaglio rappresenta la posizione
+     * apparente del radiante rispetto al telefono.
      */
 
     const targetAngle =
-        currentShowerAz - heading;
+        currentShowerAz-heading;
 
 
     $("targetContainer").style.transform =
@@ -1320,15 +2072,18 @@ function handleOrientation(e){
      */
 
     if(
-        typeof e.webkitCompassHeading === "number"
+        typeof e.webkitCompassHeading ===
+        "number"
     ){
 
-        h = e.webkitCompassHeading;
+        h =
+            e.webkitCompassHeading;
 
     }
 
+
     /*
-     * Android / altri browser
+     * Android
      */
 
     else if(
@@ -1336,9 +2091,10 @@ function handleOrientation(e){
     ){
 
         h =
-            (360 - e.alpha) % 360;
+            (360-e.alpha)%360;
 
     }
+
 
     else{
 
@@ -1401,8 +2157,8 @@ function startGPS(){
 
 
                 /*
-                 * Appena abbiamo il GPS
-                 * ricalcoliamo il radiante.
+                 * Ricalcoliamo immediatamente
+                 * il radiante.
                  */
 
                 updateSky();
@@ -1413,7 +2169,7 @@ function startGPS(){
             e => {
 
                 $("place").textContent =
-                    "GPS: " + e.message;
+                    "GPS: "+e.message;
 
             },
 
@@ -1451,7 +2207,7 @@ async function startSensors(){
 
 
     /*
-     * Bussola
+     * BUSSOLA
      */
 
     try{
@@ -1464,7 +2220,8 @@ async function startSensors(){
             &&
 
             typeof
-            DeviceOrientationEvent.requestPermission
+            DeviceOrientationEvent
+            .requestPermission
             ===
             "function"
 
@@ -1502,6 +2259,7 @@ async function startSensors(){
 
     }
 
+
     catch(e){
 
         $("status").textContent =
@@ -1514,7 +2272,7 @@ async function startSensors(){
 
 
 /* ============================================================
-   PULSANTE CALIBRA
+   CALIBRA
    ============================================================ */
 
 $("cal").onclick = () => {
@@ -1526,7 +2284,7 @@ $("cal").onclick = () => {
 
 
 /* ============================================================
-   PULSANTE AVVIA
+   AVVIA
    ============================================================ */
 
 $("start").onclick =
@@ -1539,11 +2297,14 @@ $("start").onclick =
 
 $("nightBtn").onclick = () => {
 
-    night = !night;
+    night =
+        !night;
 
 
     $("redfilter").style.display =
-        night ? "block" : "none";
+        night
+        ? "block"
+        : "none";
 
 
     $("nightBtn").textContent =
@@ -1556,7 +2317,7 @@ $("nightBtn").onclick = () => {
 
 
 /* ============================================================
-   AVVIO INIZIALE
+   AVVIO
    ============================================================ */
 
 updateSky();
@@ -1579,10 +2340,14 @@ setInterval(
    SERVICE WORKER
    ============================================================ */
 
-if("serviceWorker" in navigator){
+if(
+    "serviceWorker" in navigator
+){
 
     navigator.serviceWorker
+
         .register("sw.js")
+
         .catch(() => {});
 
 }
