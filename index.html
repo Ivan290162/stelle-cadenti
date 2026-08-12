@@ -7,321 +7,1587 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
 <title>Cacciatore di Stelle Cadenti</title>
+
 <link rel="manifest" href="manifest.json">
+
 <style>
-:root{--red:#ff4b4b;--dim:#ff7777;--bg:#030000;--panel:#110303;--gold:#ffd700;--cyan:#4fc3f7}
-*{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--red);font-family:system-ui,-apple-system,Segoe UI,sans-serif;height:100%;overflow:hidden}
-body{touch-action:none}.app{height:100%;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 12px env(safe-area-inset-bottom)}
-header{display:flex;justify-content:space-between;align-items:center;padding:8px 2px 5px}
-h1{font-size:18px;margin:0;font-weight:700}.sub{font-size:11px;opacity:.75}
-button{background:#180505;color:var(--red);border:1px solid #702020;border-radius:10px;padding:8px 10px;font-weight:700}
-main{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
-.compassWrap{position:relative;flex:1;min-height:250px;display:grid;place-items:center;overflow:hidden;border:1px solid #3d0c0c;border-radius:18px;background:radial-gradient(circle,#160303 0,#060000 62%,#000 100%)}
-.compass{width:min(82vw,390px);height:min(82vw,390px);max-height:55vh;border:2px solid #8d2828;border-radius:50%;position:relative;display:grid;place-items:center;box-shadow:0 0 30px #240000 inset}
-.compass:before{content:"";position:absolute;inset:8%;border:1px solid #451313;border-radius:50%}
 
-/* Contenitore del quadrante che ruota */
-.tick-container {
-    position: absolute;
-    inset: 0;
-    transition: transform 0.12s linear;
-    pointer-events: none;
-}
-.tick{position:absolute;inset:0;text-align:center;font-weight:800;font-size:15px;color:var(--gold)}
-.n{position:absolute;top:8px;left:50%;transform:translateX(-50%)}
-.e{position:absolute;right:12px;top:50%;transform:translateY(-50%)}
-.s{position:absolute;bottom:8px;left:50%;transform:translateX(-50%)}
-.w{position:absolute;left:12px;top:50%;transform:translateY(-50%)}
-
-/* FRECCIA FISSA - parte sopra i gradi e termina con una punta */
-.arrow-fixed {
-    position: absolute;
-    width: 3px;
-    height: 60px;
-    background: var(--cyan);
-    top: 13%;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-    pointer-events: none;
-    box-shadow: 0 0 12px rgba(79, 195, 247, 0.35);
-    border-radius: 2px;
+:root{
+    --red:#ff4b4b;
+    --dim:#ff7777;
+    --bg:#030000;
+    --panel:#110303;
+    --gold:#ffd700;
+    --cyan:#4fc3f7;
 }
 
-/* Punta vera e propria */
-.arrow-fixed:before {
-    content: '';
-    position: absolute;
-    top: -1px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-bottom: 13px solid var(--cyan);
-    filter: drop-shadow(0 0 6px rgba(79, 195, 247, 0.35));
+*{
+    box-sizing:border-box
+}
+
+html,body{
+    margin:0;
+    background:var(--bg);
+    color:var(--red);
+    font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+    height:100%;
+    overflow:hidden
+}
+
+body{
+    touch-action:none
+}
+
+.app{
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    padding:env(safe-area-inset-top) 12px env(safe-area-inset-bottom)
+}
+
+header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px 2px 5px
+}
+
+h1{
+    font-size:18px;
+    margin:0;
+    font-weight:700
+}
+
+.sub{
+    font-size:11px;
+    opacity:.75
+}
+
+button{
+    background:#180505;
+    color:var(--red);
+    border:1px solid #702020;
+    border-radius:10px;
+    padding:8px 10px;
+    font-weight:700
+}
+
+main{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    min-height:0
+}
+
+/* =========================================================
+   QUADRANTE
+   ========================================================= */
+
+.compassWrap{
+    position:relative;
+    flex:1;
+    min-height:250px;
+    display:grid;
+    place-items:center;
+    overflow:hidden;
+    border:1px solid #3d0c0c;
+    border-radius:18px;
+    background:radial-gradient(
+        circle,
+        #160303 0,
+        #060000 62%,
+        #000 100%
+    )
+}
+
+.compass{
+    width:min(82vw,390px);
+    height:min(82vw,390px);
+    max-height:55vh;
+    border:2px solid #8d2828;
+    border-radius:50%;
+    position:relative;
+    display:grid;
+    place-items:center;
+    box-shadow:0 0 30px #240000 inset
+}
+
+.compass:before{
+    content:"";
+    position:absolute;
+    inset:8%;
+    border:1px solid #451313;
+    border-radius:50%
+}
+
+/* =========================================================
+   QUADRANTE CHE RUOTA
+   ========================================================= */
+
+.tick-container{
+    position:absolute;
+    inset:0;
+    transition:transform .12s linear;
+    pointer-events:none
+}
+
+.tick{
+    position:absolute;
+    inset:0;
+    text-align:center;
+    font-weight:800;
+    font-size:15px;
+    color:var(--gold)
+}
+
+.n{
+    position:absolute;
+    top:8px;
+    left:50%;
+    transform:translateX(-50%)
+}
+
+.e{
+    position:absolute;
+    right:12px;
+    top:50%;
+    transform:translateY(-50%)
+}
+
+.s{
+    position:absolute;
+    bottom:8px;
+    left:50%;
+    transform:translateX(-50%)
+}
+
+.w{
+    position:absolute;
+    left:12px;
+    top:50%;
+    transform:translateY(-50%)
+}
+
+/* =========================================================
+   FRECCIA FISSA
+   Non parte dal centro per non coprire i gradi
+   ========================================================= */
+
+.arrow-fixed{
+    position:absolute;
+    width:3px;
+    height:65px;
+    background:var(--cyan);
+    top:13%;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:10;
+    pointer-events:none;
+    box-shadow:0 0 12px rgba(79,195,247,.35);
+    border-radius:2px
+}
+
+/* Punta */
+
+.arrow-fixed:before{
+    content:"";
+    position:absolute;
+    top:-1px;
+    left:50%;
+    transform:translateX(-50%);
+    width:0;
+    height:0;
+    border-left:7px solid transparent;
+    border-right:7px solid transparent;
+    border-bottom:13px solid var(--cyan);
+    filter:drop-shadow(
+        0 0 6px rgba(79,195,247,.35)
+    )
 }
 
 /* Piccolo punto alla base */
-.arrow-fixed:after {
-    content: '';
-    position: absolute;
-    bottom: -3px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 5px;
-    height: 5px;
-    background: var(--cyan);
-    border-radius: 50%;
+
+.arrow-fixed:after{
+    content:"";
+    position:absolute;
+    bottom:-3px;
+    left:50%;
+    transform:translateX(-50%);
+    width:5px;
+    height:5px;
+    background:var(--cyan);
+    border-radius:50%
 }
 
-/* MODIFICA: Gradi perfettamente centrati */
-.center-container {
-    position: relative;
-    z-index: 5;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 15px; /* Leggero spostamento verso il basso per evitare la freccia */
+/* =========================================================
+   CENTRO
+   ========================================================= */
+
+.center-container{
+    position:relative;
+    z-index:5;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    margin-top:15px
 }
+
 .center{
     text-align:center;
     font-size:32px;
     font-weight:900;
     color:var(--gold);
-    text-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
-    line-height: 1;
-    padding: 0;
-    background: transparent;
+    text-shadow:0 0 30px rgba(255,215,0,.4);
+    line-height:1;
+    padding:0;
+    background:transparent
 }
+
 .bearing{
     font-size:14px;
     color:var(--cyan);
     font-weight:600;
-    text-shadow: 0 0 20px rgba(79, 195, 247, 0.3);
-    margin-top: 4px;
+    text-shadow:0 0 20px rgba(79,195,247,.3);
+    margin-top:4px
 }
 
-/* Indicatore dello sciame */
-.target-container {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    transition: transform 0.12s linear;
-}
-.target-indicator {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 75%;
-    height: 75%;
-    border-radius: 50%;
-    border: 2px dashed rgba(255, 215, 0, 0.25);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.target-label {
-    position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.85);
-    color: var(--gold);
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 10px;
-    border: 1px solid var(--gold);
-    white-space: nowrap;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
-}
-.target-marker {
-    position: absolute;
-    top: -2px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-top: 12px solid var(--gold);
-    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4));
+/* =========================================================
+   INDICATORE RADiante
+   ========================================================= */
+
+.target-container{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    transition:transform .12s linear
 }
 
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
-.card{background:var(--panel);border:1px solid #3d0c0c;border-radius:12px;padding:10px}
-.label{font-size:10px;opacity:.7;text-transform:uppercase}
-.value{font-size:16px;font-weight:800;margin-top:3px;color:var(--gold)}
-.small{font-size:11px;line-height:1.35;color:#aaa}
-.status{font-size:11px;min-height:16px;text-align:center;color:var(--cyan)}
-.controls{display:flex;gap:7px;margin-top:4px}
-.controls button{flex:1}
-.redfilter{position:fixed;inset:0;background:rgba(255,0,0,.10);pointer-events:none;mix-blend-mode:multiply}
-@media(min-width:700px){.app{max-width:800px;margin:auto}.compassWrap{min-height:430px}}
+.target-indicator{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:75%;
+    height:75%;
+    border-radius:50%;
+    border:2px dashed rgba(255,215,0,.25);
+    display:flex;
+    align-items:center;
+    justify-content:center
+}
+
+.target-label{
+    position:absolute;
+    top:-10px;
+    left:50%;
+    transform:translateX(-50%);
+    background:rgba(0,0,0,.85);
+    color:var(--gold);
+    font-size:10px;
+    font-weight:700;
+    padding:2px 8px;
+    border-radius:10px;
+    border:1px solid var(--gold);
+    white-space:nowrap;
+    box-shadow:0 0 15px rgba(255,215,0,.15)
+}
+
+.target-marker{
+    position:absolute;
+    top:-2px;
+    left:50%;
+    transform:translateX(-50%);
+    width:0;
+    height:0;
+    border-left:6px solid transparent;
+    border-right:6px solid transparent;
+    border-top:12px solid var(--gold);
+    filter:drop-shadow(
+        0 0 8px rgba(255,215,0,.4)
+    )
+}
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-top:4px
+}
+
+.card{
+    background:var(--panel);
+    border:1px solid #3d0c0c;
+    border-radius:12px;
+    padding:10px
+}
+
+.label{
+    font-size:10px;
+    opacity:.7;
+    text-transform:uppercase
+}
+
+.value{
+    font-size:16px;
+    font-weight:800;
+    margin-top:3px;
+    color:var(--gold)
+}
+
+.small{
+    font-size:11px;
+    line-height:1.35;
+    color:#aaa
+}
+
+.status{
+    font-size:11px;
+    min-height:16px;
+    text-align:center;
+    color:var(--cyan)
+}
+
+.controls{
+    display:flex;
+    gap:7px;
+    margin-top:4px
+}
+
+.controls button{
+    flex:1
+}
+
+.redfilter{
+    position:fixed;
+    inset:0;
+    background:rgba(255,0,0,.10);
+    pointer-events:none;
+    mix-blend-mode:multiply
+}
+
+@media(min-width:700px){
+
+    .app{
+        max-width:800px;
+        margin:auto
+    }
+
+    .compassWrap{
+        min-height:430px
+    }
+
+}
+
 </style>
 </head>
+
 <body>
+
 <div class="app">
-<header><div><h1>🌠 Cacciatore di Stelle Cadenti</h1><div class="sub">Punta il telefono verso il cielo</div></div><button id="nightBtn">🔴 NOTTE</button></header>
+
+<header>
+
+    <div>
+        <h1>🌠 Cacciatore di Stelle Cadenti</h1>
+        <div class="sub">
+            Punta il telefono verso il cielo
+        </div>
+    </div>
+
+    <button id="nightBtn">
+        🔴 NOTTE
+    </button>
+
+</header>
+
 <main>
+
 <div class="compassWrap">
-  <div class="compass" id="compass">
-    <!-- Quadrante che ruota (N, E, S, O) -->
-    <div class="tick-container" id="tickContainer">
-        <div class="tick">
-            <span class="n">N</span>
-            <span class="e">E</span>
-            <span class="s">S</span>
-            <span class="w">O</span>
+
+    <div class="compass" id="compass">
+
+        <!-- =================================================
+             QUADRANTE
+             ================================================= -->
+
+        <div class="tick-container" id="tickContainer">
+
+            <div class="tick">
+
+                <span class="n">N</span>
+                <span class="e">E</span>
+                <span class="s">S</span>
+                <span class="w">O</span>
+
+            </div>
+
         </div>
-    </div>
-    
-    <!-- Indicatore dello sciame che ruota con il quadrante -->
-    <div class="target-container" id="targetContainer">
-        <div class="target-indicator" id="targetIndicator">
-            <div class="target-marker"></div>
-            <div class="target-label" id="targetLabel">Perseidi 45°</div>
+
+
+        <!-- =================================================
+             INDICATORE DEL RADIANTE
+             ================================================= -->
+
+        <div class="target-container" id="targetContainer">
+
+            <div class="target-indicator" id="targetIndicator">
+
+                <div class="target-marker"></div>
+
+                <div class="target-label" id="targetLabel">
+                    Perseidi
+                </div>
+
+            </div>
+
         </div>
+
+
+        <!-- =================================================
+             FRECCIA FISSA
+             ================================================= -->
+
+        <div class="arrow-fixed"></div>
+
+
+        <!-- =================================================
+             CENTRO
+             ================================================= -->
+
+        <div class="center-container">
+
+            <div class="center" id="heading">
+                --°
+            </div>
+
+            <div class="bearing" id="dir">
+                Attendo bussola…
+            </div>
+
+        </div>
+
     </div>
-    
-    <!-- Freccia fissa -->
-    <div class="arrow-fixed"></div>
-    
-    <!-- MODIFICA: Gradi centrati al centro -->
-    <div class="center-container">
-        <div class="center" id="heading">--°</div>
-        <div class="bearing" id="dir">Attendo bussola…</div>
-    </div>
-  </div>
+
 </div>
-<div class="status" id="status">Premi "Avvia sensori" e consenti GPS/orientamento.</div>
-<div class="controls"><button id="start">📍 Avvia sensori</button><button id="cal">🧭 Calibra</button></div>
+
+
+<div class="status" id="status">
+    Premi "Avvia sensori" e consenti GPS/orientamento.
+</div>
+
+
+<div class="controls">
+
+    <button id="start">
+        📍 Avvia sensori
+    </button>
+
+    <button id="cal">
+        🧭 Calibra
+    </button>
+
+</div>
+
+
 <div class="grid">
-  <div class="card"><div class="label">Posizione</div><div class="value" id="gps">--</div><div class="small" id="place">GPS non attivo</div></div>
-  <div class="card"><div class="label">Luna</div><div class="value" id="moon">--</div><div class="small" id="moonInfo">--</div></div>
-  <div class="card"><div class="label">Sciame attivo</div><div class="value" id="shower">--</div><div class="small" id="showerInfo">--</div></div>
-  <div class="card"><div class="label">Direzione consigliata</div><div class="value" id="best">--</div><div class="small" id="bestInfo">--</div></div>
+
+    <div class="card">
+
+        <div class="label">
+            Posizione
+        </div>
+
+        <div class="value" id="gps">
+            --
+        </div>
+
+        <div class="small" id="place">
+            GPS non attivo
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="label">
+            Luna
+        </div>
+
+        <div class="value" id="moon">
+            --
+        </div>
+
+        <div class="small" id="moonInfo">
+            --
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="label">
+            Sciame attivo
+        </div>
+
+        <div class="value" id="shower">
+            --
+        </div>
+
+        <div class="small" id="showerInfo">
+            --
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="label">
+            Radiante
+        </div>
+
+        <div class="value" id="best">
+            --
+        </div>
+
+        <div class="small" id="bestInfo">
+            --
+        </div>
+
+    </div>
+
 </div>
+
 </main>
+
 </div>
-<div class="redfilter" id="redfilter" style="display:none"></div>
+
+
+<div
+    class="redfilter"
+    id="redfilter"
+    style="display:none">
+</div>
+
+
 <script>
-const $=id=>document.getElementById(id);
-let heading=0, lat=null, lon=null, watch=null, night=false;
+
+/* ============================================================
+   RIFERIMENTO RAPIDO AL DOM
+   ============================================================ */
+
+const $ = id => document.getElementById(id);
+
+
+/* ============================================================
+   VARIABILI
+   ============================================================ */
+
+let heading = 0;
+
+let lat = null;
+let lon = null;
+
+let watch = null;
+
+let night = false;
+
 let currentShowerAz = 45;
 
-const showers=[
- {name:"Quadrantidi",peak:[1,4],active:[12,28,1,12],rate:25,az:45},
- {name:"Liridi",peak:[4,22],active:[4,16,4,30],rate:18,az:70},
- {name:"Eta Aquaridi",peak:[5,6],active:[4,19,5,28],rate:50,az:110},
- {name:"Delta Aquaridi",peak:[7,30],active:[7,12,8,23],rate:25,az:140},
- {name:"Perseidi",peak:[8,12],active:[7,17,8,24],rate:100,az:45},
- {name:"Orionidi",peak:[10,21],active:[10,2,11,7],rate:20,az:90},
- {name:"Leonidi",peak:[11,17],active:[11,6,11,30],rate:15,az:80},
- {name:"Geminidi",peak:[12,14],active:[12,4,12,20],rate:150,az:180},
- {name:"Ursidi",peak:[12,22],active:[12,17,12,26],rate:10,az:15}
+let currentShowerAltitude = null;
+
+
+/* ============================================================
+   SCIAMI METEORICI
+   ============================================================ */
+
+const showers = [
+
+    {
+        name:"Quadrantidi",
+        peak:[1,4],
+        active:[12,28,1,12],
+        rate:25,
+        az:45,
+        ra:230,
+        dec:49
+    },
+
+    {
+        name:"Liridi",
+        peak:[4,22],
+        active:[4,16,4,30],
+        rate:18,
+        az:70,
+        ra:271,
+        dec:34
+    },
+
+    {
+        name:"Eta Aquaridi",
+        peak:[5,6],
+        active:[4,19,5,28],
+        rate:50,
+        az:110,
+        ra:338,
+        dec:-1
+    },
+
+    {
+        name:"Delta Aquaridi",
+        peak:[7,30],
+        active:[7,12,8,23],
+        rate:25,
+        az:340,
+        ra:340,
+        dec:-16
+    },
+
+    {
+        name:"Perseidi",
+        peak:[8,12],
+        active:[7,17,8,24],
+        rate:100,
+
+        /*
+         * Coordinate approssimative del radiante
+         *
+         * RA  = circa 48°
+         * Dec = circa +58°
+         */
+
+        ra:48,
+        dec:58,
+
+        az:45
+    },
+
+    {
+        name:"Orionidi",
+        peak:[10,21],
+        active:[10,2,11,7],
+        rate:20,
+        az:90,
+        ra:95,
+        dec:16
+    },
+
+    {
+        name:"Leonidi",
+        peak:[11,17],
+        active:[11,6,11,30],
+        rate:15,
+        az:80,
+        ra:153,
+        dec:22
+    },
+
+    {
+        name:"Geminidi",
+        peak:[12,14],
+        active:[12,4,12,20],
+        rate:150,
+        az:180,
+        ra:112,
+        dec:33
+    },
+
+    {
+        name:"Ursidi",
+        peak:[12,22],
+        active:[12,17,12,26],
+        rate:10,
+        az:15,
+        ra:217,
+        dec:76
+    }
+
 ];
 
-function dayOfYear(d){return Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(d.getFullYear(),0,0))/86400000)}
+
+/* ============================================================
+   GIORNO DELL'ANNO
+   ============================================================ */
+
+function dayOfYear(d){
+
+    return Math.floor(
+
+        (
+            Date.UTC(
+                d.getFullYear(),
+                d.getMonth(),
+                d.getDate()
+            )
+
+            -
+
+            Date.UTC(
+                d.getFullYear(),
+                0,
+                0
+            )
+        )
+
+        / 86400000
+
+    );
+
+}
+
+
+/* ============================================================
+   SCIAME ATTIVO
+   ============================================================ */
 
 function activeShower(){
- const d=new Date(), m=d.getMonth()+1, day=d.getDate();
- let candidates=showers.filter(s=>{
-   let [m1,d1,m2,d2]=s.active;
-   if(m1===m2)return m===m1&&day>=d1&&day<=d2;
-   return (m===m1&&day>=d1)||(m===m2&&day<=d2);
- });
- if(!candidates.length)return null;
- return candidates.sort((a,b)=>Math.abs(dayOfYear(d)-dayOfYear(new Date(d.getFullYear(),a.peak[0]-1,a.peak[1])))-Math.abs(dayOfYear(d)-dayOfYear(new Date(d.getFullYear(),b.peak[0]-1,b.peak[1]))))[0];
+
+    const d = new Date();
+
+    const m = d.getMonth() + 1;
+    const day = d.getDate();
+
+
+    let candidates = showers.filter(s => {
+
+        let [m1,d1,m2,d2] = s.active;
+
+
+        if(m1 === m2){
+
+            return (
+                m === m1 &&
+                day >= d1 &&
+                day <= d2
+            );
+
+        }
+
+
+        return (
+
+            (m === m1 && day >= d1) ||
+
+            (m === m2 && day <= d2)
+
+        );
+
+    });
+
+
+    if(!candidates.length){
+
+        return null;
+
+    }
+
+
+    return candidates.sort(
+
+        (a,b) =>
+
+        Math.abs(
+
+            dayOfYear(d) -
+
+            dayOfYear(
+
+                new Date(
+                    d.getFullYear(),
+                    a.peak[0]-1,
+                    a.peak[1]
+                )
+
+            )
+
+        )
+
+        -
+
+        Math.abs(
+
+            dayOfYear(d) -
+
+            dayOfYear(
+
+                new Date(
+                    d.getFullYear(),
+                    b.peak[0]-1,
+                    b.peak[1]
+                )
+
+            )
+
+        )
+
+    )[0];
+
 }
+
+
+/* ============================================================
+   FASE LUNARE
+   ============================================================ */
 
 function moonPhase(date){
- const syn=29.530588853, ref=new Date(Date.UTC(2000,0,6,18,14,0));
- let age=((date-ref)/86400000)%syn;if(age<0)age+=syn;
- const frac=age/syn, illum=(1-Math.cos(2*Math.PI*frac))/2;
- let name=frac<.0625?"Luna nuova":frac<.1875?"Falce crescente":frac<.3125?"Primo quarto":frac<.4375?"Gibbosa crescente":frac<.5625?"Luna piena":frac<.6875?"Gibbosa calante":frac<.8125?"Ultimo quarto":frac<.9375?"Falce calante":"Luna nuova";
- return {name,illum,age};
+
+    const syn = 29.530588853;
+
+    const ref = new Date(
+        Date.UTC(
+            2000,
+            0,
+            6,
+            18,
+            14,
+            0
+        )
+    );
+
+
+    let age =
+        ((date - ref) / 86400000) % syn;
+
+
+    if(age < 0){
+
+        age += syn;
+
+    }
+
+
+    const frac = age / syn;
+
+
+    const illum =
+        (1 - Math.cos(2*Math.PI*frac)) / 2;
+
+
+    let name =
+
+        frac < .0625 ? "Luna nuova" :
+
+        frac < .1875 ? "Falce crescente" :
+
+        frac < .3125 ? "Primo quarto" :
+
+        frac < .4375 ? "Gibbosa crescente" :
+
+        frac < .5625 ? "Luna piena" :
+
+        frac < .6875 ? "Gibbosa calante" :
+
+        frac < .8125 ? "Ultimo quarto" :
+
+        frac < .9375 ? "Falce calante" :
+
+        "Luna nuova";
+
+
+    return {
+        name,
+        illum,
+        age
+    };
+
 }
 
-function cardinal(deg){let a=["N","NE","E","SE","S","SO","O","NO"];return a[Math.round(deg/45)%8]}
+
+/* ============================================================
+   DIREZIONE CARDINALE
+   ============================================================ */
+
+function cardinal(deg){
+
+    let a = [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SO",
+        "O",
+        "NO"
+    ];
+
+    return a[
+        Math.round(deg / 45) % 8
+    ];
+
+}
+
+
+/* ============================================================
+   ❤️ CUORE ASTRONOMICO
+   ============================================================ */
+
+
+/*
+ * Julian Date
+ *
+ * Trasforma la data normale in Giorno Giuliano.
+ */
+
+function julianDate(date){
+
+    return date.getTime() / 86400000
+           + 2440587.5;
+
+}
+
+
+/*
+ * Tempo siderale locale
+ *
+ * Restituisce il tempo siderale locale
+ * espresso in gradi.
+ */
+
+function localSiderealTime(date, lon){
+
+    const jd = julianDate(date);
+
+    const T =
+        (jd - 2451545.0) / 36525;
+
+
+    let gst =
+
+        280.46061837 +
+
+        360.98564736629 *
+        (jd - 2451545.0) +
+
+        0.000387933 * T * T -
+
+        T * T * T / 38710000;
+
+
+    gst =
+        ((gst % 360) + 360) % 360;
+
+
+    let lst = gst + lon;
+
+
+    return (
+        (lst % 360) + 360
+    ) % 360;
+
+}
+
+
+/*
+ * Trasforma:
+ *
+ * RA + Dec
+ *
+ * in:
+ *
+ * Azimut + Altezza
+ */
+
+function radiantPosition(
+    ra,
+    dec,
+    lat,
+    lon,
+    date
+){
+
+    const RA =
+        ra * Math.PI / 180;
+
+    const DEC =
+        dec * Math.PI / 180;
+
+    const LAT =
+        lat * Math.PI / 180;
+
+
+    /*
+     * Tempo siderale locale
+     */
+
+    const lst =
+        localSiderealTime(
+            date,
+            lon
+        );
+
+
+    /*
+     * Angolo orario
+     */
+
+    let Hdeg =
+        lst - ra;
+
+
+    Hdeg =
+        ((Hdeg + 540) % 360) - 180;
+
+
+    const H =
+        Hdeg * Math.PI / 180;
+
+
+    /*
+     * ==========================
+     * ALTEZZA
+     * ==========================
+     */
+
+    const sinAlt =
+
+        Math.sin(LAT) *
+        Math.sin(DEC)
+
+        +
+
+        Math.cos(LAT) *
+        Math.cos(DEC) *
+        Math.cos(H);
+
+
+    const altitude =
+
+        Math.asin(sinAlt) *
+        180 / Math.PI;
+
+
+    /*
+     * ==========================
+     * AZIMUT
+     * ==========================
+     */
+
+    const y =
+        Math.sin(H);
+
+
+    const x =
+
+        Math.cos(H) *
+        Math.sin(LAT)
+
+        -
+
+        Math.tan(DEC) *
+        Math.cos(LAT);
+
+
+    let azimuth =
+
+        Math.atan2(y,x) *
+        180 / Math.PI
+
+        +
+
+        180;
+
+
+    azimuth =
+        (azimuth + 360) % 360;
+
+
+    return {
+
+        azimuth:azimuth,
+
+        altitude:altitude
+
+    };
+
+}
+
+
+/* ============================================================
+   AGGIORNA IL CIELO
+   ============================================================ */
 
 function updateSky(){
- const s=activeShower(), moon=moonPhase(new Date());
- $("moon").textContent=moon.name;
- $("moonInfo").textContent=`Illuminazione circa ${Math.round(moon.illum*100)}%`;
- 
- if(s){
-   currentShowerAz = s.az;
-   $("shower").textContent=s.name;
-   $("showerInfo").textContent=`Picco intorno al ${s.peak[1]}/${s.peak[0]} · ZHR ~${s.rate}`;
-   $("best").textContent=cardinal(s.az)+` ${s.az}°`;
-   $("bestInfo").textContent="Punta verso questa zona e guarda anche lateralmente.";
-   $("targetLabel").textContent = `${s.name} ${s.az}°`;
-   $("targetIndicator").style.display = 'flex';
- }else{
-   $("shower").textContent="Nessuno in finestra";
-   $("showerInfo").textContent="Le meteore sporadiche restano comunque osservabili.";
-   $("best").textContent="Lontano dalla Luna";
-   $("bestInfo").textContent="Scegli la parte di cielo più buia.";
-   $("targetLabel").textContent = "Meteore sporadiche";
-   $("targetIndicator").style.display = 'flex';
- }
+
+    const s = activeShower();
+
+    const moon =
+        moonPhase(new Date());
+
+
+    /*
+     * Luna
+     */
+
+    $("moon").textContent =
+        moon.name;
+
+
+    $("moonInfo").textContent =
+
+        `Illuminazione circa ${
+            Math.round(moon.illum * 100)
+        }%`;
+
+
+    /*
+     * Nessuno sciame
+     */
+
+    if(!s){
+
+        $("shower").textContent =
+            "Nessuno in finestra";
+
+
+        $("showerInfo").textContent =
+            "Le meteore sporadiche restano comunque osservabili.";
+
+
+        $("best").textContent =
+            "—";
+
+
+        $("bestInfo").textContent =
+            "Scegli la parte di cielo più buia.";
+
+
+        $("targetLabel").textContent =
+            "Meteore sporadiche";
+
+
+        return;
+
+    }
+
+
+    /*
+     * Sciame attivo
+     */
+
+    $("shower").textContent =
+        s.name;
+
+
+    $("showerInfo").textContent =
+
+        `Picco intorno al ${
+            s.peak[1]
+        }/${
+            s.peak[0]
+        } · ZHR ~${s.rate}`;
+
+
+    /*
+     * Se abbiamo il GPS,
+     * calcoliamo il radiante.
+     */
+
+    if(lat !== null && lon !== null){
+
+        const result =
+            radiantPosition(
+
+                s.ra,
+                s.dec,
+
+                lat,
+                lon,
+
+                new Date()
+
+            );
+
+
+        currentShowerAz =
+            result.azimuth;
+
+
+        currentShowerAltitude =
+            result.altitude;
+
+
+        $("best").textContent =
+
+            `${cardinal(result.azimuth)}
+             ${result.azimuth.toFixed(1)}°`;
+
+
+        $("bestInfo").textContent =
+
+            `Altezza ${result.altitude.toFixed(1)}°
+             · Radiante ${s.name}`;
+
+
+        $("targetLabel").textContent =
+
+            `${s.name} ${result.azimuth.toFixed(0)}°`;
+
+
+        /*
+         * Aggiorniamo anche l'indicatore
+         * se la bussola è già attiva.
+         */
+
+        setHeading(heading);
+
+    }
+
+    else{
+
+        /*
+         * GPS non ancora disponibile
+         */
+
+        $("best").textContent =
+            "Attendo GPS";
+
+
+        $("bestInfo").textContent =
+            "Serve la posizione per calcolare il radiante.";
+
+
+        $("targetLabel").textContent =
+            `${s.name}`;
+
+    }
+
 }
+
+
+/* ============================================================
+   BUSSOLA
+   ============================================================ */
 
 function setHeading(h){
- heading=(h+360)%360;
- $("heading").textContent=Math.round(heading)+"°";
- $("dir").textContent=cardinal(heading);
- 
- $("tickContainer").style.transform = `rotate(${-heading}deg)`;
- 
- const targetAngle = currentShowerAz - heading;
- $("targetContainer").style.transform = `rotate(${targetAngle}deg)`;
+
+    heading =
+        (h + 360) % 360;
+
+
+    $("heading").textContent =
+        Math.round(heading) + "°";
+
+
+    $("dir").textContent =
+        cardinal(heading);
+
+
+    /*
+     * Ruota solamente il quadrante
+     */
+
+    $("tickContainer").style.transform =
+
+        `rotate(${-heading}deg)`;
+
+
+    /*
+     * Posizione apparente del radiante
+     */
+
+    const targetAngle =
+        currentShowerAz - heading;
+
+
+    $("targetContainer").style.transform =
+
+        `rotate(${targetAngle}deg)`;
+
 }
+
+
+/* ============================================================
+   EVENTO ORIENTAMENTO
+   ============================================================ */
 
 function handleOrientation(e){
- let h;
- if(typeof e.webkitCompassHeading==="number") h=e.webkitCompassHeading;
- else if(typeof e.alpha==="number") h=(360-e.alpha)%360;
- else return;
- setHeading(h);
- $("status").textContent="Bussola attiva · muovi lentamente il telefono per calibrare";
+
+    let h;
+
+
+    /*
+     * iPhone / Safari
+     */
+
+    if(
+        typeof e.webkitCompassHeading === "number"
+    ){
+
+        h = e.webkitCompassHeading;
+
+    }
+
+    /*
+     * Android / altri browser
+     */
+
+    else if(
+        typeof e.alpha === "number"
+    ){
+
+        h =
+            (360 - e.alpha) % 360;
+
+    }
+
+    else{
+
+        return;
+
+    }
+
+
+    setHeading(h);
+
+
+    $("status").textContent =
+        "Bussola attiva · muovi lentamente il telefono per calibrare";
+
 }
+
+
+/* ============================================================
+   GPS
+   ============================================================ */
+
+function startGPS(){
+
+    if(!navigator.geolocation){
+
+        $("place").textContent =
+            "GPS non disponibile";
+
+        return;
+
+    }
+
+
+    watch =
+        navigator.geolocation.watchPosition(
+
+            p => {
+
+                lat =
+                    p.coords.latitude;
+
+
+                lon =
+                    p.coords.longitude;
+
+
+                $("gps").textContent =
+
+                    `${lat.toFixed(4)},
+                     ${lon.toFixed(4)}`;
+
+
+                $("place").textContent =
+
+                    `Accuratezza ±${
+                        Math.round(
+                            p.coords.accuracy
+                        )
+                    } m`;
+
+
+                /*
+                 * Appena abbiamo il GPS
+                 * ricalcoliamo il radiante.
+                 */
+
+                updateSky();
+
+            },
+
+
+            e => {
+
+                $("place").textContent =
+                    "GPS: " + e.message;
+
+            },
+
+
+            {
+
+                enableHighAccuracy:true,
+
+                maximumAge:5000,
+
+                timeout:10000
+
+            }
+
+        );
+
+}
+
+
+/* ============================================================
+   AVVIO SENSORI
+   ============================================================ */
 
 async function startSensors(){
- $("status").textContent="Richiedo permessi…";
- if(location.protocol!=="https:" && location.hostname!=="localhost"){
-   $("status").textContent="Nota: Chrome richiede HTTPS per i sensori. Usa GitHub Pages/Netlify o localhost.";
- }
- if(navigator.geolocation){
-   watch=navigator.geolocation.watchPosition(p=>{
-     lat=p.coords.latitude;lon=p.coords.longitude;
-     $("gps").textContent=`${lat.toFixed(4)}, ${lon.toFixed(4)}`;
-     $("place").textContent=`Accuratezza ±${Math.round(p.coords.accuracy)} m`;
-   },e=>{$("place").textContent="GPS: "+e.message},{enableHighAccuracy:true,maximumAge:5000});
- }
- try{
-   if(typeof DeviceOrientationEvent!=="undefined" && typeof DeviceOrientationEvent.requestPermission==="function"){
-     const r=await DeviceOrientationEvent.requestPermission();
-     if(r!=="granted") throw new Error("permesso orientamento negato");
-   }
-   window.addEventListener("deviceorientation",handleOrientation,true);
-   $("status").textContent="Sensori attivi";
- }catch(e){$("status").textContent="Orientamento non disponibile: "+e.message}
+
+    $("status").textContent =
+        "Richiedo permessi…";
+
+
+    /*
+     * GPS
+     */
+
+    startGPS();
+
+
+    /*
+     * Bussola
+     */
+
+    try{
+
+        if(
+
+            typeof DeviceOrientationEvent !==
+            "undefined"
+
+            &&
+
+            typeof
+            DeviceOrientationEvent.requestPermission
+            ===
+            "function"
+
+        ){
+
+            const r =
+                await DeviceOrientationEvent
+                .requestPermission();
+
+
+            if(r !== "granted"){
+
+                throw new Error(
+                    "permesso orientamento negato"
+                );
+
+            }
+
+        }
+
+
+        window.addEventListener(
+
+            "deviceorientation",
+
+            handleOrientation,
+
+            true
+
+        );
+
+
+        $("status").textContent =
+            "Sensori attivi";
+
+    }
+
+    catch(e){
+
+        $("status").textContent =
+            "Orientamento non disponibile: "
+            + e.message;
+
+    }
+
 }
 
-$("start").onclick=startSensors;
-$("cal").onclick=()=>{$("status").textContent="Calibrazione: fai lentamente una rotazione completa a forma di 8."};
-$("nightBtn").onclick=()=>{night=!night;$("redfilter").style.display=night?"block":"none";$("nightBtn").textContent=night?"⚫ NORMALE":"🔴 NOTTE"};
+
+/* ============================================================
+   PULSANTE CALIBRA
+   ============================================================ */
+
+$("cal").onclick = () => {
+
+    $("status").textContent =
+        "Calibrazione: fai lentamente una rotazione completa a forma di 8.";
+
+};
+
+
+/* ============================================================
+   PULSANTE AVVIA
+   ============================================================ */
+
+$("start").onclick =
+    startSensors;
+
+
+/* ============================================================
+   MODALITÀ NOTTE
+   ============================================================ */
+
+$("nightBtn").onclick = () => {
+
+    night = !night;
+
+
+    $("redfilter").style.display =
+        night ? "block" : "none";
+
+
+    $("nightBtn").textContent =
+
+        night
+        ? "⚫ NORMALE"
+        : "🔴 NOTTE";
+
+};
+
+
+/* ============================================================
+   AVVIO INIZIALE
+   ============================================================ */
 
 updateSky();
-setInterval(updateSky,60000);
-if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
+
+
+/*
+ * Aggiorna ogni minuto.
+ */
+
+setInterval(
+
+    updateSky,
+
+    60000
+
+);
+
+
+/* ============================================================
+   SERVICE WORKER
+   ============================================================ */
+
+if("serviceWorker" in navigator){
+
+    navigator.serviceWorker
+        .register("sw.js")
+        .catch(() => {});
+
+}
+
 </script>
+
 </body>
 </html>
