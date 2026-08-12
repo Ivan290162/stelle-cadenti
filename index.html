@@ -34,7 +34,7 @@ main{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
 .s{position:absolute;bottom:8px;left:50%;transform:translateX(-50%)}
 .w{position:absolute;left:12px;top:50%;transform:translateY(-50%)}
 
-/* MODIFICA: Nuova freccia a punta */
+/* Freccia a punta */
 .arrow-fixed {
     position: absolute;
     width: 4px;
@@ -48,8 +48,6 @@ main{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
     box-shadow: 0 0 15px rgba(79, 195, 247, 0.3);
     border-radius: 2px;
 }
-
-/* Punta della freccia (triangolo verso l'alto) */
 .arrow-fixed:before {
     content: '';
     position: absolute;
@@ -63,8 +61,6 @@ main{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
     border-bottom: 16px solid var(--cyan);
     filter: drop-shadow(0 -4px 8px rgba(79, 195, 247, 0.3));
 }
-
-/* Base della freccia (pallino) */
 .arrow-fixed:after {
     content: '';
     position: absolute;
@@ -78,25 +74,32 @@ main{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
     box-shadow: 0 0 15px rgba(79, 195, 247, 0.3);
 }
 
-/* Testo dei gradi */
+/* MODIFICA: Gradi perfettamente centrati */
+.center-container {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px; /* Leggero spostamento verso il basso per evitare la freccia */
+}
 .center{
     text-align:center;
-    font-size:28px;
+    font-size:32px;
     font-weight:900;
-    position:relative;
-    z-index:5;
-    background:rgba(0,0,0,0.8);
-    padding:4px 14px;
-    border-radius:10px;
     color:var(--gold);
-    text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-    margin-top: 30px;
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+    line-height: 1;
+    padding: 0;
+    background: transparent;
 }
 .bearing{
-    font-size:13px;
-    margin-top:2px;
+    font-size:14px;
     color:var(--cyan);
     font-weight:600;
+    text-shadow: 0 0 20px rgba(79, 195, 247, 0.3);
+    margin-top: 4px;
 }
 
 /* Indicatore dello sciame */
@@ -183,11 +186,11 @@ main{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
         </div>
     </div>
     
-    <!-- Nuova freccia a punta -->
+    <!-- Freccia fissa -->
     <div class="arrow-fixed"></div>
     
-    <!-- Centro con gradi -->
-    <div style="position:relative; z-index:5; margin-top: 35px;">
+    <!-- MODIFICA: Gradi centrati al centro -->
+    <div class="center-container">
         <div class="center" id="heading">--°</div>
         <div class="bearing" id="dir">Attendo bussola…</div>
     </div>
